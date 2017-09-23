@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/horizontal_padding"
+    android:paddingRight="@dimen/horizontal_padding"
+    android:paddingTop="@dimen/vertical_padding"
+    android:paddingBottom="@dimen/vertical_padding"
+    android:orientation="vertical"
+    tools:context="com.alexkozubets.sample.MenuFragment">
+
+    <Button
+        android:id="@+id/btn_simple_resize_sample"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_btn_simple_resize_sample_text"/>
+
+    <Button
+        android:id="@+id/btn_animated_resize_sample"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin_small"
+        android:text="@string/menu_btn_animated_resize_sample_text"/>
+
+    <Button
+        android:id="@+id/btn_list_items_resize_sample"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin_small"
+        android:text="@string/menu_btn_list_items_resize_sample_text"/>
+
+</LinearLayout>

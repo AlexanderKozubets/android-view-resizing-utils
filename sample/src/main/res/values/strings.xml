@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">AndroidViewResizingUtils</string>
+    <string name="menu_btn_simple_resize_sample_text">Simple Resize Sample</string>
+    <string name="menu_btn_animated_resize_sample_text">Animated Resize Sample</string>
+    <string name="menu_btn_list_items_resize_sample_text">List Items Expand/Collapse sample</string>
 </resources>

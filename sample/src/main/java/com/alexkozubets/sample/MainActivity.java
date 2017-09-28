@@ -5,7 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
-import com.alexkozubets.android.utils.R;
+import com.alexkozubets.samlpe.R;
 
 public class MainActivity extends Activity implements MenuFragment.OnMenuItemClickListener {
 
@@ -21,7 +21,7 @@ public class MainActivity extends Activity implements MenuFragment.OnMenuItemCli
 
     @Override
     public void onSimpleResizeSampleClicked() {
-        // TODO: 9/23/17 implement
+        addFragment(new SimpleResizeFragment(), true);
     }
 
     @Override

@@ -139,4 +139,8 @@ public class ViewParams {
     public void apply() {
         view.requestLayout();
     }
+
+    public static ViewParams of(View v) {
+        return new ViewParams(v);
+    }
 }

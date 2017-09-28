@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alexkozubets.android.utils.R;
+import com.alexkozubets.samlpe.R;
+
 
 public class MenuFragment extends Fragment implements View.OnClickListener {
 

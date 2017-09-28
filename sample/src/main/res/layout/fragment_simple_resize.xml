@@ -1,16 +1,80 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     tools:context="com.alexkozubets.sample.SimpleResizeFragment">
 
+    <RadioGroup
+        android:id="@+id/rg_modes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Absolute"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Relative to screen"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Relative to parent"/>
+
+    </RadioGroup>
+
     <ImageView
-        android:id="@+id/img_android"
+        android:id="@+id/img_droid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/rg_modes"
+        android:layout_above="@+id/tv_width_label"
+        android:layout_centerInParent="true"
         android:background="@android:color/white"
         android:scaleType="centerInside"
         android:src="@drawable/android"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_droid_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/img_droid"
+        android:layout_alignTop="@+id/img_droid"
+        android:layout_alignRight="@+id/img_droid"
+        android:layout_alignBottom="@+id/img_droid"
+        android:gravity="center"
+        android:text="W: %s H: %s"/>
+
+    <TextView
+        android:id="@+id/tv_width_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sb_width"
+        android:gravity="center"
+        android:text="Width"/>
+
+    <SeekBar
+        android:id="@+id/sb_width"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_above="@+id/tv_height_label"/>
+
+    <TextView
+        android:id="@+id/tv_height_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sb_height"
+        android:gravity="center"
+        android:text="Height"/>
+
+    <SeekBar
+        android:id="@+id/sb_height"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

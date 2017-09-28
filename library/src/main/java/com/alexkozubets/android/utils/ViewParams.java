@@ -1,10 +1,13 @@
 package com.alexkozubets.android.utils;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Px;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
 @SuppressWarnings("unused")
 public class ViewParams {
@@ -67,6 +70,40 @@ public class ViewParams {
         return this;
     }
 
+    public ViewParams partOfParentWidth(final float f) {
+        if (!hasParent(view)) {
+            throw new RuntimeException("View is not attached to parent!");
+        }
+
+        final View parent = (View) view.getParent();
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                removeOnGlobalLayoutListener(view, this);
+                width((int) (parent.getWidth() * f)).apply();
+            }
+        });
+        view.requestLayout();
+        return this;
+    }
+
+    public ViewParams partOfParentHeight(final float f) {
+        if (!hasParent(view)) {
+            throw new RuntimeException("View is not attached to parent!");
+        }
+
+        final View parent = (View) view.getParent();
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                removeOnGlobalLayoutListener(view, this);
+                height((int) (parent.getHeight() * f)).apply();
+            }
+        });
+        view.requestLayout();
+        return this;
+    }
+
     public ViewParams width(@Px int w) {
         params.width = w;
         return this;
@@ -126,6 +163,14 @@ public class ViewParams {
         return marginParams(params).bottomMargin;
     }
 
+    boolean needsMeasuring() {
+        return getWidth() < 0 || getHeight() < 0;
+    }
+
+    boolean hasParent(View view) {
+        return view.getParent() != null;
+    }
+
     @NonNull
     private ViewGroup.MarginLayoutParams marginParams(ViewGroup.LayoutParams params) {
         if (params instanceof ViewGroup.MarginLayoutParams) {
@@ -142,5 +187,14 @@ public class ViewParams {
 
     public static ViewParams of(View v) {
         return new ViewParams(v);
+    }
+
+    protected static void removeOnGlobalLayoutListener(View v, OnGlobalLayoutListener listener) {
+        ViewTreeObserver observer = v.getViewTreeObserver();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            observer.removeGlobalOnLayoutListener(listener);
+        } else {
+            observer.removeOnGlobalLayoutListener(listener);
+        }
     }
 }

@@ -18,6 +18,12 @@ public class ViewParams {
 
     protected final DisplayMetrics displayMetrics;
 
+    private ApplyAfterMeasurementParams afterMeasurementParams;
+
+    public static ViewParams of(View v) {
+        return new ViewParams(v);
+    }
+
     private ViewParams(View v) {
         view = v;
         params = v.getLayoutParams();
@@ -70,37 +76,33 @@ public class ViewParams {
         return this;
     }
 
-    public ViewParams partOfParentWidth(final float f) {
+    public ViewParams partOfParentWidth(float fraction) {
         if (!hasParent(view)) {
             throw new RuntimeException("View is not attached to parent!");
         }
-
-        final View parent = (View) view.getParent();
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                removeOnGlobalLayoutListener(view, this);
-                width((int) (parent.getWidth() * f)).apply();
-            }
-        });
-        view.requestLayout();
+        ensureAfterMeasurementParams();
+        afterMeasurementParams.parentWidthFraction = fraction;
         return this;
     }
 
-    public ViewParams partOfParentHeight(final float f) {
+    public ViewParams partOfParentHeight(float fraction) {
         if (!hasParent(view)) {
             throw new RuntimeException("View is not attached to parent!");
         }
+        ensureAfterMeasurementParams();
+        afterMeasurementParams.parentHeightFraction = fraction;
+        return this;
+    }
 
-        final View parent = (View) view.getParent();
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                removeOnGlobalLayoutListener(view, this);
-                height((int) (parent.getHeight() * f)).apply();
-            }
-        });
-        view.requestLayout();
+    public ViewParams widthToHeightRatio(float ratio) {
+        ensureAfterMeasurementParams();
+        afterMeasurementParams.widthToHeightRatio = ratio;
+        return this;
+    }
+
+    public ViewParams heightToWidthRatio(float ratio) {
+        ensureAfterMeasurementParams();
+        afterMeasurementParams.heightToWidthRatio = ratio;
         return this;
     }
 
@@ -182,19 +184,101 @@ public class ViewParams {
     }
 
     public void apply() {
+        if (afterMeasurementParams != null) {
+            SelfRemoveGlobalLayoutListener.addTo(view, new SelfRemoveGlobalLayoutListener.Listener() {
+                @Override
+                public void onGlobalLayout(View view) {
+                    applyAfterMeasurement(view, afterMeasurementParams);
+                    afterMeasurementParams = null;
+                }
+            });
+        }
         view.requestLayout();
     }
 
-    public static ViewParams of(View v) {
-        return new ViewParams(v);
+    private void ensureAfterMeasurementParams() {
+        if (afterMeasurementParams == null) {
+            afterMeasurementParams = new ApplyAfterMeasurementParams();
+        }
     }
 
-    protected static void removeOnGlobalLayoutListener(View v, OnGlobalLayoutListener listener) {
-        ViewTreeObserver observer = v.getViewTreeObserver();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            observer.removeGlobalOnLayoutListener(listener);
-        } else {
-            observer.removeOnGlobalLayoutListener(listener);
+    private void applyAfterMeasurement(View view, ApplyAfterMeasurementParams params) {
+        final View parent = (View) view.getParent();
+        Integer w = view.getWidth(), h = view.getHeight();
+
+        if (params.parentWidthFraction != null) {
+            w = (int) (parent.getWidth() * params.parentWidthFraction);
+        }
+
+        if (params.parentHeightFraction != null) {
+            h = (int) (parent.getHeight() * params.parentHeightFraction);
+        }
+
+        if (params.widthToHeightRatio != null) {
+            w = (int) (h * params.widthToHeightRatio);
+        }
+
+        if (params.heightToWidthRatio != null) {
+            h = (int) (w * params.heightToWidthRatio);
+        }
+
+        width(w);
+        height(h);
+
+        view.requestLayout();
+    }
+
+    private static class ApplyAfterMeasurementParams {
+
+        Float heightToWidthRatio;
+
+        Float widthToHeightRatio;
+
+        Float parentWidthFraction;
+
+        Float parentHeightFraction;
+
+        private void clear() {
+            heightToWidthRatio = null;
+            widthToHeightRatio = null;
+            parentWidthFraction = null;
+            parentHeightFraction = null;
+        }
+    }
+
+    private static class SelfRemoveGlobalLayoutListener implements OnGlobalLayoutListener {
+
+        private View view;
+
+        private Listener listener;
+
+        public static void addTo(View view, Listener listener) {
+            view.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new SelfRemoveGlobalLayoutListener(view, listener));
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            removeOnGlobalLayoutListener(view, this);
+            listener.onGlobalLayout(view);
+        }
+
+        private SelfRemoveGlobalLayoutListener(View view, Listener listener) {
+            this.view = view;
+            this.listener = listener;
+        }
+
+        private static void removeOnGlobalLayoutListener(View v, OnGlobalLayoutListener listener) {
+            ViewTreeObserver observer = v.getViewTreeObserver();
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                observer.removeGlobalOnLayoutListener(listener);
+            } else {
+                observer.removeOnGlobalLayoutListener(listener);
+            }
+        }
+
+        private interface Listener {
+            void onGlobalLayout(View view);
         }
     }
 }

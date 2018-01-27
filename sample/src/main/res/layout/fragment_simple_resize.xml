@@ -1,8 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:orientation="vertical"
     tools:context="com.alexkozubets.sample.SimpleResizeFragment">
 
     <RadioGroup
@@ -11,70 +12,62 @@
         android:layout_height="wrap_content">
 
         <RadioButton
+            android:id="@+id/rb_absolute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Absolute"/>
+            android:text="Absolute" />
 
         <RadioButton
+            android:id="@+id/rb_relative_to_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Relative to screen"/>
+            android:text="Relative to screen" />
 
         <RadioButton
+            android:id="@+id/rb_relative_to_parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Relative to parent"/>
+            android:text="Relative to parent" />
 
     </RadioGroup>
 
-    <ImageView
-        android:id="@+id/img_droid"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rg_modes"
-        android:layout_above="@+id/tv_width_label"
-        android:layout_centerInParent="true"
-        android:background="@android:color/white"
-        android:scaleType="centerInside"
-        android:src="@drawable/android"/>
+        android:background="@color/colorPrimaryDark">
 
-    <TextView
-        android:id="@+id/tv_droid_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/img_droid"
-        android:layout_alignTop="@+id/img_droid"
-        android:layout_alignRight="@+id/img_droid"
-        android:layout_alignBottom="@+id/img_droid"
-        android:gravity="center"
-        android:text="W: %s H: %s"/>
+        <ImageView
+            android:id="@+id/img_droid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/colorAccent"
+            android:scaleType="centerInside"
+            android:src="@drawable/android" />
 
-    <TextView
-        android:id="@+id/tv_width_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/sb_width"
-        android:gravity="center"
-        android:text="Width"/>
+        <TextView
+            android:id="@+id/tv_droid_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/img_droid"
+            android:layout_alignRight="@+id/img_droid"
+            android:gravity="center"
+            android:text="W: %s H: %s" />
 
-    <SeekBar
-        android:id="@+id/sb_width"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_above="@+id/tv_height_label"/>
+        <TextView
+            android:id="@+id/tv_width_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/sb_size"
+            android:gravity="center"
+            android:text="Size" />
 
-    <TextView
-        android:id="@+id/tv_height_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/sb_height"
-        android:gravity="center"
-        android:text="Height"/>
+        <SeekBar
+            android:id="@+id/sb_size"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true" />
 
-    <SeekBar
-        android:id="@+id/sb_height"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

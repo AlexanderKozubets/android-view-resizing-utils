@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements MenuFragment.OnMenuItemCli
 
     @Override
     public void onAnimatedResizeSampleClicked() {
-        // TODO: 9/23/17 implement
+        addFragment(new AnimatedResizeFragment(), true);
     }
 
     @Override

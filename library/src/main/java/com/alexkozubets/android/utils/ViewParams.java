@@ -2,6 +2,7 @@ package com.alexkozubets.android.utils;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -279,6 +280,52 @@ public class ViewParams {
 
         private interface Listener {
             void onGlobalLayout(View view);
+        }
+    }
+
+    @NonNull
+    public ViewParamsAnimator animate() {
+        return new ViewParamsAnimator(this);
+    }
+
+    @Nullable
+    protected ViewParamsAnimator getViewParamsAnimator() {
+        Object animator = view.getTag(R.id.view_params_animator);
+        ViewParamsAnimator viewParamsAnimator;
+        if (animator instanceof ViewParamsAnimator) {
+            return (ViewParamsAnimator) animator;
+        } else {
+            return null;
+        }
+    }
+
+    protected void setViewParamsAnimator(@NonNull ViewParamsAnimator viewParamsAnimator) {
+        ViewParamsAnimator oldAnimator = getViewParamsAnimator();
+        if (oldAnimator != null && oldAnimator.isRunning()) {
+//            view.removeOnAttachStateChangeListener(oldAnimator); // FIXME: 7/24/17 remove callback!!!
+            oldAnimator.end();
+        }
+        view.addOnAttachStateChangeListener(new CancelAnimationOnDetachFromWindow(viewParamsAnimator));
+        view.setTag(R.id.view_params_animator, viewParamsAnimator);
+    }
+
+    private static class CancelAnimationOnDetachFromWindow implements View.OnAttachStateChangeListener {
+
+        private final ViewParamsAnimator animator;
+
+        public CancelAnimationOnDetachFromWindow(ViewParamsAnimator animator) {
+            this.animator = animator;
+        }
+
+        @Override
+        public void onViewAttachedToWindow(View view) {
+
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(View view) {
+            view.removeOnAttachStateChangeListener(this);
+            animator.cancel();
         }
     }
 }

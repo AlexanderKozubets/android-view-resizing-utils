@@ -1,13 +1,13 @@
 package com.alexkozubets.sample;
 
 
-import android.app.Fragment;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,13 +1,13 @@
 package com.alexkozubets.sample;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 
 import com.alexkozubets.samlpe.R;
 
-public class MainActivity extends Activity implements MenuFragment.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity implements MenuFragment.OnMenuItemClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements MenuFragment.OnMenuItemCli
     }
 
     private void addFragment(Fragment fragment, boolean addToBackStack) {
-        FragmentTransaction transaction = getFragmentManager()
+        FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.container, fragment);
         if (addToBackStack) {

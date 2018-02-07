@@ -190,9 +190,8 @@ public class ViewParamsAnimator {
         }
     }
 
-    @Deprecated
     private boolean needsMeasuring() {
-        return viewParams.getWidth() < 0 || viewParams.getHeight() < 0;
+        return viewParams.view.getWidth() == 0 || viewParams.view.getHeight() == 0;
     }
 
     private boolean isInitialized() {

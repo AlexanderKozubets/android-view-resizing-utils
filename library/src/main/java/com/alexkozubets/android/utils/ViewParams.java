@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.View.OnAttachStateChangeListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -20,6 +21,8 @@ public class ViewParams {
     protected final DisplayMetrics displayMetrics;
 
     private ApplyAfterMeasurementParams afterMeasurementParams;
+
+    private OnAttachStateChangeListener onAttachStateChangeListener;
 
     public static ViewParams of(View v) {
         return new ViewParams(v);
@@ -306,17 +309,29 @@ public class ViewParams {
         }
     }
 
-    protected void setViewParamsAnimator(@NonNull ViewParamsAnimator viewParamsAnimator) {
+    private void setViewParamsAnimator(@NonNull ViewParamsAnimator viewParamsAnimator) {
         ViewParamsAnimator oldAnimator = getViewParamsAnimator();
         if (oldAnimator != null && oldAnimator.isRunning()) {
-//            view.removeOnAttachStateChangeListener(oldAnimator); // FIXME: 7/24/17 remove callback!!!
-            oldAnimator.end();
+            setOnAttachStateChangeListener(null);
+            oldAnimator.cancel();
         }
-        view.addOnAttachStateChangeListener(new CancelAnimationOnDetachFromWindow(viewParamsAnimator));
+        setOnAttachStateChangeListener(new CancelAnimationOnDetachFromWindow(viewParamsAnimator));
         view.setTag(R.id.view_params_animator, viewParamsAnimator);
     }
 
-    private static class CancelAnimationOnDetachFromWindow implements View.OnAttachStateChangeListener {
+    private void setOnAttachStateChangeListener(@Nullable OnAttachStateChangeListener listener) {
+        if (this.onAttachStateChangeListener != null) {
+            view.removeOnAttachStateChangeListener(this.onAttachStateChangeListener);
+            this.onAttachStateChangeListener = null;
+        }
+
+        if (listener != null) {
+            this.onAttachStateChangeListener = listener;
+            view.addOnAttachStateChangeListener(listener);
+        }
+    }
+
+    private static class CancelAnimationOnDetachFromWindow implements OnAttachStateChangeListener {
 
         private final ViewParamsAnimator animator;
 

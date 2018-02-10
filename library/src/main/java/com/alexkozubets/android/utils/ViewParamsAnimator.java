@@ -17,11 +17,11 @@ import java.util.HashMap;
 
 public class ViewParamsAnimator {
 
-    private ViewParams viewParams;
+    private final ViewParams viewParams;
 
-    private HashMap<Object, ObjectAnimator> animations = new HashMap<>(6);
+    private final HashMap<Object, ObjectAnimator> animations = new HashMap<>(6);
 
-    private HashMap<ObjectAnimator, Runnable> pendingInit = new HashMap<>(6);
+    private final HashMap<ObjectAnimator, Runnable> pendingInit = new HashMap<>(6);
 
     private AnimatorSet animatorSet;
 
@@ -31,7 +31,20 @@ public class ViewParamsAnimator {
 
     ViewParamsAnimator(ViewParams viewParams) {
         this.viewParams = viewParams;
-        this.animatorSet = new AnimatorSet();
+        this.animatorSet = getAnimatorSet();
+    }
+
+    private AnimatorSet getAnimatorSet() {
+        if (animatorSet != null && (animatorSet.isStarted() || animatorSet.isRunning())) {
+            animatorSet.end();
+            animatorSet = new AnimatorSet();
+        }
+
+        if (animatorSet == null) {
+            animatorSet = new AnimatorSet();
+        }
+
+        return animatorSet;
     }
 
     public ViewParamsAnimator widthBy(int value) {
@@ -63,7 +76,7 @@ public class ViewParamsAnimator {
     }
 
     public ViewParamsAnimator setDuration(long duration) {
-        animatorSet.setDuration(duration);
+        getAnimatorSet().setDuration(duration);
         return this;
     }
 
@@ -88,28 +101,26 @@ public class ViewParamsAnimator {
     }
 
     public ViewParamsAnimator setInterpolator(Interpolator interpolator) {
-        this.animatorSet.setInterpolator(interpolator);
+        getAnimatorSet().setInterpolator(interpolator);
         return this;
     }
 
     public ViewParamsAnimator addAnimatorListener(Animator.AnimatorListener listener) {
-        this.animatorSet.addListener(listener);
+        getAnimatorSet().addListener(listener);
         return this;
     }
 
     public ViewParamsAnimator removeAnimatorListener(Animator.AnimatorListener listener) {
-        this.animatorSet.removeListener(listener);
+        getAnimatorSet().removeListener(listener);
         return this;
     }
 
     public ViewParamsAnimator removeAllAnimatorListeners() {
-        this.animatorSet.removeAllListeners();
+        getAnimatorSet().removeAllListeners();
         return this;
     }
 
     public void start() {
-        viewParams.setViewParamsAnimator(this);
-
         if (isInitialized()) {
             startInternal();
         } else {
@@ -135,15 +146,7 @@ public class ViewParamsAnimator {
         }
 
         if (animatorSet.isRunning()) {
-            animatorSet.end();
-            Log.d("VPA","END!!!");
-//            viewParams.view.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    startInternal();
-//                }
-//            });
-            return;
+            animatorSet = getAnimatorSet();
         }
 
         Collection<ObjectAnimator> animators = animations.values();
@@ -199,8 +202,7 @@ public class ViewParamsAnimator {
     }
 
     private void setupAnimation(ObjectAnimator animator, SetupAnimationRunnable init) {
-        ViewParamsAnimator currentAnimator = viewParams.getViewParamsAnimator();
-        if (needsMeasuring() || (currentAnimator != null && currentAnimator.isRunning())) {
+        if (needsMeasuring()) {
             pendingInit.put(animator, init);
         } else {
             init.run();

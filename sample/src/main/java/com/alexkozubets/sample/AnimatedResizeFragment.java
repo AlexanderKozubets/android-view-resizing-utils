@@ -56,7 +56,7 @@ public class AnimatedResizeFragment extends Fragment {
             }
         });
 
-//        modes.check(R.id.rb_resize);
+        modes.check(R.id.rb_resize);
     }
 
     private void resetState(View v) {

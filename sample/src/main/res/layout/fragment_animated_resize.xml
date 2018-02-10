@@ -34,21 +34,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#ffffff"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:background="#aaffffff"
         android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rb_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None" />
 
         <RadioButton
             android:id="@+id/rb_resize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:text="Resize animation" />
 
         <RadioButton
             android:id="@+id/rb_scale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:text="Scale animation" />
 
     </RadioGroup>

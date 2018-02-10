@@ -186,11 +186,13 @@ public class ViewParams {
 
     public void apply() {
         if (afterMeasurementParams != null) {
+            final ApplyAfterMeasurementParams params = afterMeasurementParams;
+            afterMeasurementParams = null;
+
             SelfRemoveGlobalLayoutListener.addTo(view, new SelfRemoveGlobalLayoutListener.Listener() {
                 @Override
                 public void onGlobalLayout(View view) {
-                    applyAfterMeasurement(view, afterMeasurementParams);
-                    afterMeasurementParams = null;
+                    applyAfterMeasurement(view, params);
                 }
             });
         }
@@ -285,7 +287,12 @@ public class ViewParams {
 
     @NonNull
     public ViewParamsAnimator animate() {
-        return new ViewParamsAnimator(this);
+        ViewParamsAnimator animator = getViewParamsAnimator();
+        if (animator == null) {
+            animator = new ViewParamsAnimator(this);
+            setViewParamsAnimator(animator);
+        }
+        return animator;
     }
 
     @Nullable

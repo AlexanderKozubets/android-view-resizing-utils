@@ -13,6 +13,8 @@ import android.widget.RadioGroup;
 import com.alexkozubets.android.utils.ViewParams;
 import com.alexkozubets.samlpe.R;
 
+import static com.alexkozubets.sample.DimenUtil.dpToPx;
+
 public class AnimatedResizeFragment extends Fragment {
 
     private final int DURATION_MS = 2500;
@@ -37,13 +39,17 @@ public class AnimatedResizeFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
+                    case R.id.rb_none: {
+                        resetState(v);
+                    } break;
+
                     case R.id.rb_resize: {
-//                        v.animate().cancel(); // TODO: 2/8/18 implement
-                        resizeBy(v, DimenUtil.dpToPx(75));
+                        resetState(v);
+                        resizeBy(v, dpToPx(75));
                     } break;
 
                     case R.id.rb_scale: {
-//                        ViewParams.of(v).animate().cancel(); // TODO: 2/8/18 implement
+                        resetState(v);
                         scaleBy(v, 0.5f);
                     } break;
                 }
@@ -51,6 +57,16 @@ public class AnimatedResizeFragment extends Fragment {
         });
 
 //        modes.check(R.id.rb_resize);
+    }
+
+    private void resetState(View v) {
+        v.animate().cancel();
+        v.setScaleX(1.0f);
+        v.setScaleY(1.0f);
+
+        ViewParams params = ViewParams.of(v);
+        params.animate().cancel();
+        params.width(dpToPx(150)).heightToWidthRatio(1f).apply();
     }
 
     private void resizeBy(View v, int value) {
@@ -72,13 +88,23 @@ public class AnimatedResizeFragment extends Fragment {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        scaleBy(v, -value);
+                        animation.removeListener(this);
+                        if (!isCanceled()) {
+                            scaleBy(v, -value);
+                        }
                     }
                 })
                 .start();
     }
 
     private class DefaultAnimatorListener implements Animator.AnimatorListener {
+
+        private boolean isCanceled;
+
+        public boolean isCanceled() {
+            return isCanceled;
+        }
+
         @Override
         public void onAnimationStart(Animator animation) {
 
@@ -91,7 +117,7 @@ public class AnimatedResizeFragment extends Fragment {
 
         @Override
         public void onAnimationCancel(Animator animation) {
-
+            isCanceled = true;
         }
 
         @Override
@@ -101,7 +127,7 @@ public class AnimatedResizeFragment extends Fragment {
 
         @Override
         public void onAnimationStart(Animator animation, boolean isReverse) {
-
+            isCanceled = false;
         }
 
         @Override

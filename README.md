@@ -1,6 +1,6 @@
 # Fluent view resizing for Android
 
-##Animation
+## Animation
 
 ```java
 ViewParams.of(findViewById(R.id.container))

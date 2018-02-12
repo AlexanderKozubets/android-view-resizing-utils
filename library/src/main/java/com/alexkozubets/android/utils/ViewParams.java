@@ -34,53 +34,55 @@ public class ViewParams {
         displayMetrics = v.getResources().getDisplayMetrics();
     }
 
-    public ViewParams fitScreenWidth() {
+    public ViewParams widthMatchScreen() {
         params.width = displayMetrics.widthPixels;
         return this;
     }
 
-    public ViewParams fitScreenHeight() {
+    public ViewParams heightMatchScreen() {
         params.height = displayMetrics.heightPixels;
         return this;
     }
 
-    public ViewParams partOfScreenWidth(float f) {
-        params.width = (int) (displayMetrics.widthPixels * f);
+    public ViewParams widthMatchScreen(float fraction) {
+        params.width = (int) (displayMetrics.widthPixels * fraction);
         return this;
     }
 
-    public ViewParams partOfScreenHeight(float f) {
-        params.height = (int) (displayMetrics.heightPixels * f);
+    public ViewParams heightMatchScreen(float fraction) {
+        params.height = (int) (displayMetrics.heightPixels * fraction);
         return this;
     }
 
-    public ViewParams fitScreen() {
-        fitScreenWidth();
-        fitScreenHeight();
+    public ViewParams matchScreenSize() {
+        widthMatchScreen();
+        heightMatchScreen();
         return this;
     }
 
-    public ViewParams wrapContentWidth() {
+    public ViewParams widthWrapContent() {
         params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         return this;
     }
 
-    public ViewParams wrapContentHeight() {
+    public ViewParams heightWrapContent() {
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         return this;
     }
 
-    public ViewParams matchParentWidth() {
+    // TODO: 2/12/18 add methods widthWrapContent(fraction) and heightWrapContent(fraction)
+
+    public ViewParams widthMatchParent() {
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         return this;
     }
 
-    public ViewParams matchParentHeight() {
+    public ViewParams heightMatchParent() {
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         return this;
     }
 
-    public ViewParams partOfParentWidth(float fraction) {
+    public ViewParams widthMatchParent(float fraction) {
         if (!hasParent(view)) {
             throw new RuntimeException("View is not attached to parent!");
         }
@@ -89,7 +91,7 @@ public class ViewParams {
         return this;
     }
 
-    public ViewParams partOfParentHeight(float fraction) {
+    public ViewParams heightMatchParent(float fraction) {
         if (!hasParent(view)) {
             throw new RuntimeException("View is not attached to parent!");
         }

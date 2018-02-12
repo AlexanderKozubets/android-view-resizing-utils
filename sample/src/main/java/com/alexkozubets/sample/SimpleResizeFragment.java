@@ -108,7 +108,7 @@ public class SimpleResizeFragment extends Fragment implements SeekBar.OnSeekBarC
 
                 case RELATIVE_TO_SCREEN: {
                     ViewParams.of(imgDroid)
-                            .partOfScreenHeight(percentToFloat(progress))
+                            .heightMatchScreen(percentToFloat(progress))
                             .widthToHeightRatio(1f)
                             .apply();
                 } break;

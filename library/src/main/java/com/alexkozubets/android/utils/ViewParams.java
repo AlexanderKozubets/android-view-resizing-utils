@@ -1,6 +1,7 @@
 package com.alexkozubets.android.utils;
 
 import android.os.Build;
+import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
@@ -112,6 +113,14 @@ public class ViewParams {
         return this;
     }
 
+    public ViewParams widthRes(@DimenRes int widthRes) {
+        return width(dimenSize(widthRes));
+    }
+
+    public ViewParams heightRes(@DimenRes int heightRes) {
+        return height(dimenSize(heightRes));
+    }
+
     public ViewParams width(@Px int w) {
         params.width = w;
         return this;
@@ -122,9 +131,26 @@ public class ViewParams {
         return this;
     }
 
+    public ViewParams marginsRes(@DimenRes int margin) {
+        return margins(dimenOffset(margin));
+    }
+
+    public ViewParams margins(@Px int margin) {
+        marginParams(params).setMargins(margin, margin, margin, margin);
+        return this;
+    }
+
+    public ViewParams marginsRes(@DimenRes int l, @DimenRes int t, @DimenRes int r, @DimenRes int b) {
+        return margins(dimenOffset(l), dimenOffset(t), dimenOffset(r), dimenOffset(b));
+    }
+
     public ViewParams margins(@Px int l, @Px int t, @Px int r, @Px int b) {
         marginParams(params).setMargins(l, t, r, b);
         return this;
+    }
+
+    public ViewParams marginLeftRes(@DimenRes int left) {
+        return marginLeft(dimenOffset(left));
     }
 
     public ViewParams marginLeft(@Px int left) {
@@ -132,14 +158,26 @@ public class ViewParams {
         return this;
     }
 
+    public ViewParams marginRightRes(@DimenRes int right) {
+        return marginRight(dimenOffset(right));
+    }
+
     public ViewParams marginRight(@Px int right) {
         marginParams(params).rightMargin = right;
         return this;
     }
 
+    public ViewParams marginTopRes(@DimenRes int top) {
+        return marginTop(dimenOffset(top));
+    }
+
     public ViewParams marginTop(@Px int top) {
         marginParams(params).topMargin = top;
         return this;
+    }
+
+    public ViewParams marginBottomRes(@DimenRes int bottom) {
+        return marginBottom(dimenOffset(bottom));
     }
 
     public ViewParams marginBottom(@Px int bottom) {
@@ -177,6 +215,14 @@ public class ViewParams {
 
     boolean hasParent(View view) {
         return view.getParent() != null;
+    }
+
+    protected int dimenOffset(@DimenRes int dimenId) {
+        return view.getResources().getDimensionPixelOffset(dimenId);
+    }
+
+    protected int dimenSize(@DimenRes int dimenId) {
+        return view.getResources().getDimensionPixelSize(dimenId);
     }
 
     @NonNull

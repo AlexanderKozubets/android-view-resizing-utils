@@ -22,24 +22,14 @@ import com.alexkozubets.samlpe.R;
 
 public class SimpleResizeFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, RadioGroup.OnCheckedChangeListener {
 
-    protected static final float MIN = 0.25f;
-
-    protected static final float MAX = 0.75f;
-
-    protected static final int MIN_WIDTH;
-
     protected static final int MIN_HEIGHT;
-
-    protected static final int MAX_WIDTH;
 
     protected static final int MAX_HEIGHT;
 
     static {
         DisplayMetrics screen = Resources.getSystem().getDisplayMetrics();
-        MIN_WIDTH = (int) (screen.widthPixels * MIN);
-        MIN_HEIGHT = (int) (screen.heightPixels * MIN);
-        MAX_WIDTH = (int) (screen.widthPixels * MAX);
-        MAX_HEIGHT = (int) (screen.heightPixels * MAX);
+        MIN_HEIGHT = (int) (screen.heightPixels * 0.25f);
+        MAX_HEIGHT = (int) (screen.heightPixels * 0.75f);
     }
 
     private ImageView imgDroid;
@@ -91,7 +81,6 @@ public class SimpleResizeFragment extends Fragment implements SeekBar.OnSeekBarC
         if (fromUser) {
             switch (mode) {
                 case ABSOLUTE: {
-//                    int w = (int) (MIN_WIDTH + percentToFloat(progress) * (MAX_WIDTH - MIN_WIDTH));
                     int h = (int) (MIN_HEIGHT + percentToFloat(progress) * (MAX_HEIGHT - MIN_HEIGHT));
                     ViewParams.of(imgDroid)
                             .height(h)
@@ -101,7 +90,7 @@ public class SimpleResizeFragment extends Fragment implements SeekBar.OnSeekBarC
 
                 case RELATIVE_TO_PARENT: {
                     ViewParams.of(imgDroid)
-                            .partOfParentHeight(percentToFloat(progress))
+                            .heightMatchParent(percentToFloat(progress))
                             .widthToHeightRatio(1f)
                             .apply();
                 } break;

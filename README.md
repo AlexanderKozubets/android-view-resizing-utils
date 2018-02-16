@@ -1,5 +1,16 @@
 # Fluent view resizing for Android
 
+## Basic usage
+```java
+ViewParams.of(someView)
+        .width(widthPx)
+        .heightRes(R.dimen.height)
+        .margins(0)
+        .marginLeftRes(R.dimen.horizontal_margin)
+        .marginRightRes(R.dimen.horizontal_margin)
+        .apply();
+```
+
 ## Animation
 
 ```java
@@ -13,4 +24,4 @@ ViewParams.of(findViewById(R.id.container))
                 .start();
 ```
 
-![](https://github.com/AlexanderKozubets/android-view-resizing-utils/preview/animated_resize_sample.gif)
+![](preview/animated_resize_sample.gif)
